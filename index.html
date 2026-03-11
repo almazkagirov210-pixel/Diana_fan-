@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Для Дианы ❤️</title>
+    <style>
+        * { cursor: none; }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            background: #010105;
+        }
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--twinkle-duration) infinite alternate;
+            background-color: var(--star-color);
+            box-shadow: 0 0 var(--glow-size) var(--star-color);
+            width: var(--star-size);
+            height: var(--star-size);
+            left: var(--star-left);
+            top: var(--star-top);
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.1; transform: scale(0.9); }
+            100% { opacity: 0.5; transform: scale(1.1); }
+        }
+        .milky-way {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 70% 40%, rgba(255,255,200,0.02) 0%, transparent 40%),
+                        radial-gradient(ellipse at 20% 80%, rgba(200,200,255,0.02) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 20%, rgba(255,200,255,0.01) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: screen;
+        }
+        .moon {
+            position: fixed;
+            top: 50px; left: 50px;
+            width: 250px; height: 250px;
+            border-radius: 50%;
+            background: url("https://www.solarsystemscope.com/textures/download/2k_moon.jpg");
+            background-size: 120% 100%;
+            box-shadow:
+                0 0 60px rgba(255,255,240,0.3),
+                inset -40px -40px 80px rgba(0,0,0,0.7);
+            z-index: 2;
+            pointer-events: none;
+            /* Анимация вращения удалена по просьбе */
+        }
+        .custom-cursor {
+            position: fixed;
+            width: 20px; height: 20px;
+            pointer-events: none;
+            z-index: 9999;
+            filter: drop-shadow(0 0 5px #ff4da6);
+        }
+        .custom-cursor::before {
+            content: "❤️";
+            font-size: 22px;
+            position: absolute;
+            top: -12px; left: -12px;
+            opacity: 0.6;
+        }
+        .content {
+            position: relative;
+            z-index: 100;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .title {
+            font-size: 56px;
+            margin-top: 40px;
+            color: #ffb0d0;
+            text-shadow: 0 0 5px #ff4da6, 0 0 10px #ff1a8c, 0 0 20px #ff1a8c;
+            animation: glowPulse 3s infinite alternate, fadeIn 2s;
+        }
+        @keyframes glowPulse {
+            from { text-shadow: 0 0 3px #ff4da6, 0 0 8px #ff1a8c, 0 0 15px #ff1a8c; }
+            to { text-shadow: 0 0 6px #ff4da6, 0 0 15px #ff1a8c, 0 0 25px #ff1a8c; }
+        }
+        .music-btn {
+            position: fixed;
+            top: 20px; right: 20px;
+            background: rgba(255,77,166,0.15);
+            border: 1px solid #ff4da6;
+            border-radius: 50px;
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; color: #ffb0d0;
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px #ff4da6;
+        }
+        .music-btn:hover {
+            background: #ff4da6;
+            color: #010105;
+            transform: scale(1.1);
+        }
+        .message {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 0 20px;
+            font-size: 22px;
+            line-height: 1.6;
+            color: #ffd0e0;
+            text-shadow: 0 0 2px #ff4da6, 0 0 5px #ff1a8c;
+            white-space: pre-line;
+            overflow: hidden;
+            border-right: 2px solid #ffb0d0;
+            animation: typing 6s steps(80,end), blink .8s infinite, fadeIn 2s;
+        }
+        @keyframes typing { from { width:0; } to { width:100%; } }
+        @keyframes blink { 50% { border-color:transparent; } }
+        .heart-grid {
+            display: grid;
+            grid-template-columns: repeat(10,1fr);
+            gap:6px;
+            max-width:900px;
+            margin:30px auto;
+            padding:20px;
+            animation:fadeIn 2.5s;
+        }
+        .photo {
+            width:100%;
+            aspect-ratio:1/1;
+            clip-path: path("M80 30 C80 -10,0 -10,0 50 C0 90,80 140,80 140 C80 140,160 90,160 50 C160 -10,80 -10,80 30 Z");
+            overflow:hidden;
+            box-shadow:0 0 12px rgba(255,77,166,0.8);
+            transition: opacity 0.5s, transform 0.3s, box-shadow 0.3s;
+            opacity:0;
+            background:#2a1a2a;
+        }
+        .photo img { width:100%; height:100%; object-fit:cover; display:block; }
+        .photo.visible { opacity:1; animation:flashPop 0.6s ease-out; }
+        @keyframes flashPop {
+            0% { opacity:0; transform:scale(0.8); box-shadow:0 0 0 #ff4da6; }
+            50% { opacity:1; transform:scale(1.05); box-shadow:0 0 25px #ff4da6,0 0 50px #ff1a8c; }
+            100% { opacity:1; transform:scale(1); box-shadow:0 0 12px #ff4da6; }
+        }
+        .photo:hover { transform:scale(1.05) rotate(1deg); box-shadow:0 0 25px #ff4da6; }
+        .footer {
+            margin:30px 0; opacity:0.6; color:#ffd0e0;
+            text-shadow:0 0 3px #ff4da6; animation:fadeIn 3s;
+        }
+        .floating-item {
+            position:absolute; pointer-events:none;
+            animation:floatUp 15s linear forwards;
+            z-index:200; filter:drop-shadow(0 0 2px #ff4da6);
+            font-size:12px; opacity:0.3; color:#ffb0d0;
+        }
+        @keyframes floatUp {
+            0% { transform:translateY(0) rotate(0deg); opacity:0.2; }
+            100% { transform:translateY(-120vh) rotate(360deg); opacity:0; }
+        }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        .shooting-star {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,255,200,0.5);
+            transform: rotate(45deg);
+            animation: shoot 2s linear forwards;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.5;
+        }
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0;
+            width: 100px; height: 1px;
+            background: linear-gradient(90deg, #fff, transparent);
+            transform: translateY(-50%);
+            opacity: 0.3;
+        }
+        @keyframes shoot {
+            0% { opacity: 0.5; transform: translate(0,0) rotate(45deg) scale(1); }
+            100% { opacity: 0; transform: translate(400px,400px) rotate(45deg) scale(0.5); }
+        }
+        @media (max-width:700px) {
+            .moon { width:140px; height:140px; top:20px; left:20px; }
+            .heart-grid { gap:4px; padding:10px; }
+            .title { font-size:40px; }
+            .message { font-size:18px; }
+            .music-btn { width:40px; height:40px; font-size:20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Звёздное небо -->
+    <div class="stars-container" id="starsContainer"></div>
+
+    <!-- Млечный Путь -->
+    <div class="milky-way"></div>
+
+    <!-- Луна (статичная) -->
+    <div class="moon"></div>
+
+    <!-- Кастомный курсор -->
+    <div class="custom-cursor" id="customCursor"></div>
+
+    <!-- Кнопка музыки -->
+    <div class="music-btn" id="musicBtn">🔇</div>
+
+    <!-- Основной контент -->
+    <div class="content">
+        <h1 class="title">DIANA ❤️</h1>
+
+        <div class="message">
+            Диана ❤️
+
+            Сегодня не праздник
+            и не какой-то особенный день.
+
+            Я просто хотел сделать
+            тебе маленький сюрприз.
+
+            Чтобы ты улыбнулась :)
+        </div>
+
+        <!-- Сетка с фото в форме сердца -->
+        <div class="heart-grid" id="heartGrid"></div>
+
+        <div class="footer">Сделано специально для тебя ❤️</div>
+    </div>
+
+    <!-- Аудио (ваш файл) -->
+    <audio id="bgMusic" loop>
+        <source src="s2m1ngrdwpt03s8828hi.m4a" type="audio/mp4">
+    </audio>
+
+    <script>
+        (function() {
+            // Кастомный курсор
+            const cursor = document.getElementById('customCursor');
+            document.addEventListener('mousemove', e => {
+                cursor.style.left = e.pageX + 'px';
+                cursor.style.top = e.pageY + 'px';
+            });
+
+            // Музыка
+            const music = document.getElementById('bgMusic');
+            music.volume = 0.2;
+            const btn = document.getElementById('musicBtn');
+            let playing = false;
+            btn.addEventListener('click', () => {
+                if (playing) {
+                    music.pause();
+                    btn.textContent = '🔇';
+                } else {
+                    music.play().catch(() => alert('Нажми "Разрешить", чтобы включить музыку ❤️'));
+                    btn.textContent = '🎵';
+                }
+                playing = !playing;
+            });
+
+            // Генерация сердца из фотографий (используем ваши изображения)
+            const grid = document.getElementById('heartGrid');
+            const rows = 10, cols = 10;
+            const isInHeart = (r, c) => {
+                const x = (c - 4.5) / 4.5 * 1.5;
+                const y = -((r - 4.5) / 4.5 * 1.5);
+                return Math.pow(x*x + y*y - 1, 3) - x*x * Math.pow(y, 3) <= 0;
+            };
+
+            // Список ваших фото (5 штук)
+            const imageNames = [
+                'photo_1_2026-03-11_05-15-40.jpg',
+                'photo_2_2026-03-11_05-15-40.jpg',
+                'photo_3_2026-03-11_05-15-40.jpg',
+                'photo_4_2026-03-11_05-15-40.jpg',
+                'photo_5_2026-03-11_05-15-40.jpg'
+            ];
+
+            const cells = [];
+            let photoCounter = 0; // для равномерного распределения
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const div = document.createElement('div');
+                    div.className = 'photo';
+                    if (!isInHeart(r, c)) {
+                        div.style.opacity = '0';
+                        div.style.pointerEvents = 'none';
+                        div.style.animation = 'none';
+                        div.style.boxShadow = 'none';
+                    } else {
+                        const img = document.createElement('img');
+                        // Берём фото по кругу
+                        img.src = imageNames[photoCounter % imageNames.length];
+                        photoCounter++;
+                        div.appendChild(img);
+                        cells.push({ element: div, distance: Math.sqrt(Math.pow(r-4.5,2) + Math.pow(c-4.5,2)) });
+                    }
+                    grid.appendChild(div);
+                }
+            }
+
+            // Анимация появления от центра
+            cells.sort((a,b) => a.distance - b.distance).forEach((cell, i) => {
+                setTimeout(() => cell.element.classList.add('visible'), i * 25);
+            });
+
+            // Генерация звёзд (1500 штук)
+            const starsContainer = document.getElementById('starsContainer');
+            for (let i = 0; i < 1500; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                const size = 0.3 + Math.random() * 2.2;
+                const rand = Math.random();
+                let color = rand < 0.5 ? '#ffffff' : rand < 0.75 ? '#fffaee' : rand < 0.9 ? '#d8e5ff' : '#ffe0d8';
+                s.style.setProperty('--star-color', color);
+                s.style.setProperty('--star-size', size + 'px');
+                s.style.setProperty('--glow-size', (size * 2) + 'px');
+                s.style.setProperty('--star-left', Math.random() * 100 + '%');
+                s.style.setProperty('--star-top', Math.random() * 100 + '%');
+                s.style.setProperty('--twinkle-duration', (2 + Math.random() * 5) + 's');
+                starsContainer.appendChild(s);
+            }
+
+            // Падающие звёзды
+            function createShootingStar() {
+                const s = document.createElement('div');
+                s.className = 'shooting-star';
+                s.style.left = Math.random() * 70 + '%';
+                s.style.top = Math.random() * 30 + '%';
+                s.style.animationDuration = (1.8 + Math.random() * 2) + 's';
+                starsContainer.appendChild(s);
+                s.addEventListener('animationend', () => s.remove());
+            }
+            setInterval(createShootingStar, 4000 + Math.random() * 5000);
+            for (let i = 0; i < 3; i++) setTimeout(createShootingStar, i * 1000);
+
+            // Редкие летающие эмодзи
+            const emojis = ['❤️','💫'];
+            setInterval(() => {
+                if (Math.random() > 0.3) return;
+                const e = document.createElement('div');
+                e.className = 'floating-item';
+                e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                e.style.left = Math.random() * 100 + 'vw';
+                e.style.top = Math.random() * 100 + 'vh';
+                e.style.animationDuration = (15 + Math.random() * 10) + 's';
+                e.style.fontSize = (8 + Math.floor(Math.random() * 8)) + 'px';
+                document.body.appendChild(e);
+                e.addEventListener('animationend', () => e.remove());
+            }, 800);
+        })();
+    </script>
+</body>
+</html>
